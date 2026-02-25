@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora Mecânica - Sto Motors</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #000000;
+            color: #E5E7EB;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 24px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: radial-gradient(circle at top left, #001F3F 0%, #020608 40%, #000000 100%);
+            border-radius: 16px;
+            padding: 24px 28px 28px;
+            box-shadow: 0 22px 60px rgba(0,0,0,0.95);
+            border: 1px solid rgba(0,123,255,0.3);
+        }
+        
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .logo-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-box img {
+            height: 64px;
+            object-fit: contain;
+        }
+        
+        .brand-text {
+            line-height: 1.1;
+        }
+        
+        .brand-main {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #FFFFFF;
+        }
+        
+        .brand-sub {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.32em;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        h1 {
+            font-size: 18px;
+            font-weight: 700;
+            text-align: right;
+            color: #007BFF;
+            text-shadow: 0 0 12px rgba(0,123,255,0.5);
+            margin: 0;
+        }
+        
+        .divider {
+            height: 1px;
+            width: 100%;
+            margin: 10px 0 18px;
+            background: linear-gradient(90deg, transparent 0%, rgba(0,123,255,0.4) 50%, transparent 100%);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1.05fr 1.05fr;
+            gap: 22px;
+        }
+        
+        .card {
+            background: rgba(2,6,12,0.96);
+            border-radius: 12px;
+            padding: 14px 16px 16px;
+            border: 1px solid rgba(0,123,255,0.4);
+            box-shadow: 0 18px 48px rgba(0,0,0,0.9);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at top left, rgba(0,123,255,0.2), transparent 60%);
+            pointer-events: none;
+        }
+        
+        .card-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #FFFFFF;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 2px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            background: rgba(0,123,255,0.2);
+            color: #007BFF;
+            border: 1px solid rgba(0,123,255,0.6);
+        }
+        
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #007BFF;
+            box-shadow: 0 0 8px rgba(0,123,255,0.8);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        thead {
+            background: linear-gradient(90deg, #020617, #001F3F);
+        }
+        
+        th, td {
+            padding: 7px 8px;
+            border-bottom: 1px solid rgba(30,41,59,0.8);
+        }
+        
+        th {
+            text-align: left;
+            color: #A0AEC0;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+        }
+        
+        tbody tr:nth-child(even) {
+            background: rgba(0,31,63,0.3);
+        }
+        
+        tbody tr:hover {
+            background: rgba(0,123,255,0.15);
+        }
+        
+        .checkbox-col {
+            width: 42px;
+            text-align: center;
+        }
+        
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #007BFF;
+        }
+        
+        input[type="number"] {
+            width: 72px;
+            padding: 4px 6px;
+            border-radius: 6px;
+            border: 1px solid rgba(0,123,255,0.5);
+            background: #020617;
+            color: #E5E7EB;
+            font-size: 13px;
+            text-align: right;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #007BFF;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.3);
+        }
+        
+        .price {
+            text-align: right;
+            color: #B3E5FC;
+            font-weight: 600;
+        }
+        
+        .total-box {
+            margin-top: 8px;
+            text-align: right;
+            font-size: 13px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .total-label {
+            color: #A0AEC0;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 11px;
+        }
+        
+        .total-value {
+            font-weight: 700;
+            color: #007BFF;
+            margin-left: 6px;
+            text-shadow: 0 0 10px rgba(0,123,255,0.6);
+        }
+        
+        .summary {
+            margin-top: 20px;
+            padding: 14px 16px 16px;
+            border-radius: 12px;
+            background: radial-gradient(circle at top left, rgba(0,123,255,0.15), rgba(2,6,23,0.95));
+            border: 1px solid rgba(0,123,255,0.6);
+            box-shadow: 0 18px 45px rgba(0,0,0,0.9);
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 13px;
+        }
+        
+        .summary-row label {
+            color: #A0AEC0;
+        }
+        
+        .summary-row span.value {
+            font-weight: 600;
+            color: #B3E5FC;
+        }
+        
+        .summary-row span.value-strong {
+            color: #007BFF;
+            text-shadow: 0 0 12px rgba(0,123,255,0.8);
+        }
+        
+        .summary-row.total {
+            border-top: 1px solid rgba(0,123,255,0.5);
+            margin-top: 6px;
+            padding-top: 8px;
+            font-size: 15px;
+        }
+        
+        .btn-copy {
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            width: 100%;
+            margin-top: 12px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,123,255,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-copy:hover {
+            box-shadow: 0 6px 20px rgba(0,123,255,0.6);
+            transform: translateY(-1px);
+        }
+        
+        .btn-copy:active {
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            h1 {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-box">
+                <img src="stomotors.jpg" alt="Sto Motors">
+                <div class="brand-text">
+                    <div class="brand-main">STO MOTORS</div>
+                    <div class="brand-sub">Performance</div>
+                </div>
+            </div>
+            <h1>Calculadora de Serviços Mecânicos</h1>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="grid">
+            <!-- CONSERTOS -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Consertos</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">OK</th>
+                            <th>Serviço</th>
+                            <th>Preço</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-conserto" data-preco="950"></td>
+                            <td>Kit Reparo</td>
+                            <td class="price">R$ 950,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-conserto" data-preco="300"></td>
+                            <td>1 pneu</td>
+                            <td class="price">R$ 300,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-conserto" data-preco="600"></td>
+                            <td>2 pneus</td>
+                            <td class="price">R$ 600,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-conserto" data-preco="900"></td>
+                            <td>3 pneus</td>
+                            <td class="price">R$ 900,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-conserto" data-preco="1200"></td>
+                            <td>4 pneus</td>
+                            <td class="price">R$ 1.200,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-conserto" data-preco="1000"></td>
+                            <td>Externo</td>
+                            <td class="price">R$ 1.000,00</td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-conserto" data-preco="1500"></td>
+                            <td>Externo Norte</td>
+                            <td class="price">R$ 1.500,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="total-box">
+                    <span class="total-label">Total consertos</span>
+                    <span id="totalConsertos" class="total-value">R$ 0,00</span>
+                </div>
+            </div>
+            
+            <!-- ITENS VENDAS -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Itens / Vendas</div>
+                    <div class="badge">
+                        <span class="badge-dot"></span>
+                        20% Painel
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">OK</th>
+                            <th>Item</th>
+                            <th>Preço</th>
+                            <th>Qtd.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-item" data-preco="5300"></td>
+                            <td>Combo mecânico</td>
+                            <td class="price">R$ 5.300,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-item" data-preco="12000"></td>
+                            <td>Rastreador</td>
+                            <td class="price">R$ 12.000,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-item" data-preco="8000"></td>
+                            <td>Nitro</td>
+                            <td class="price">R$ 8.000,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-item" data-preco="300"></td>
+                            <td>Pneu</td>
+                            <td class="price">R$ 300,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-item" data-preco="500"></td>
+                            <td>Kit Ferramentas</td>
+                            <td class="price">R$ 500,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-item" data-preco="950"></td>
+                            <td>Kit Ferramentas Mestre</td>
+                            <td class="price">R$ 950,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-item" data-preco="350"></td>
+                            <td>Chave inglesa</td>
+                            <td class="price">R$ 350,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0"></td>
+                        </tr>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" class="chk-item" data-preco="850"></td>
+                            <td>Elevador Hidráulico</td>
+                            <td class="price">R$ 850,00</td>
+                            <td><input type="number" class="qtd-item" value="0" min="0"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="total-box">
+                    <span class="total-label">Total itens</span>
+                    <span id="totalItens" class="total-value">R$ 0,00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="summary">
+            <div class="summary-row">
+                <label>Total Consertos</label>
+                <span class="value" id="resConsertos">R$ 0,00</span>
+            </div>
+            <div class="summary-row">
+                <label>Total Vendas</label>
+                <span class="value" id="resItens">R$ 0,00</span>
+            </div>
+            <div class="summary-row">
+                <label>Taxa Painel (20% vendas)</label>
+                <span class="value" id="resTaxa">R$ 0,00</span>
+            </div>
+            <div class="summary-row total">
+                <label>Valor Total (Consertos + Vendas)</label>
+                <span class="value-strong" id="resTotal">R$ 0,00</span>
+            </div>
+            <button class="btn-copy" onclick="copiarRegistroVendas(this)">📋 Copiar Registro Vendas Discord</button>
+        </div>
+    </div>
+    
+    <script>
+        function formatBRL(v) {
+            return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function recalcular() {
+            let totalConsertos = 0;
+            document.querySelectorAll('.chk-conserto').forEach(chk => {
+                if (chk.checked) totalConsertos += parseFloat(chk.dataset.preco) || 0;
+            });
+
+            let totalItens = 0;
+            const chkItens = document.querySelectorAll('.chk-item');
+            const qtdItens = document.querySelectorAll('.qtd-item');
+            for (let idx = 0; idx < chkItens.length; idx++) {
+                const chk = chkItens[idx];
+                if (chk.checked) {
+                    const preco = parseFloat(chk.dataset.preco) || 0;
+                    const qtd = parseInt(qtdItens[idx].value) || 0;
+                    totalItens += preco * qtd;
+                }
+            }
+
+            const taxa = totalItens * 0.20;
+            const totalGeral = totalConsertos + totalItens;
+
+            document.getElementById('totalConsertos').textContent = formatBRL(totalConsertos);
+            document.getElementById('totalItens').textContent = formatBRL(totalItens);
+            document.getElementById('resConsertos').textContent = formatBRL(totalConsertos);
+            document.getElementById('resItens').textContent = formatBRL(totalItens);
+            document.getElementById('resTaxa').textContent = formatBRL(taxa);
+            document.getElementById('resTotal').textContent = formatBRL(totalGeral);
+        }
+
+        function copiarRegistroVendas(botao) {
+            let itensLista = [];
+            const chkItens = document.querySelectorAll('.chk-item');
+            const qtdItens = document.querySelectorAll('.qtd-item');
+            for (let idx = 0; idx < chkItens.length; idx++) {
+                const chk = chkItens[idx];
+                if (chk.checked && (parseInt(qtdItens[idx].value) || 0) > 0) {
+                    const nome = chk.closest('tr').querySelector('td:nth-child(2)').textContent.trim();
+                    const qtd = qtdItens[idx].value;
+                    const precoUnit = parseFloat(chk.dataset.preco).toLocaleString('pt-BR');
+                    itensLista.push(`${nome} (x${qtd}) - R$ ${precoUnit}`);
+                }
+            }
+
+            const totalVendas = document.getElementById('resItens').textContent;
+            const taxa = document.getElementById('resTaxa').textContent;
+
+            let texto = `**🛒 Registro de Vendas Sto Motors**\n\n`;
+            if (itensLista.length > 0) {
+                texto += `**Itens Vendidos:**\n${itensLista.join('\n')}\n\n`;
+            } else {
+                texto += '**Nenhum item vendido.**\n\n';
+            }
+            texto += `**💰 Total Vendas:** ${totalVendas}\n**📊 Taxa Painel (20%):** ${taxa}\n**➡️ Enviar ao painel: ${taxa}**`;
+
+            // Verifica se a API de clipboard está disponível
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(texto).then(() => {
+                    const originalText = botao.textContent;
+                    botao.textContent = '✅ Copiado!';
+                    botao.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                    setTimeout(() => {
+                        botao.textContent = originalText;
+                        botao.style.background = '';
+                    }, 2000);
+                }).catch(() => {
+                    alert('Erro ao copiar automaticamente. Copie manualmente:\n\n' + texto);
+                });
+            } else {
+                // Fallback: seleciona o texto no textarea temporário
+                const textarea = document.createElement('textarea');
+                textarea.value = texto;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                const originalText = botao.textContent;
+                botao.textContent = '✅ Copiado!';
+                botao.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                setTimeout(() => {
+                    botao.textContent = originalText;
+                    botao.style.background = '';
+                }, 2000);
+            }
+        }
+
+        // Eventos consertos
+        document.querySelectorAll('.chk-conserto').forEach(el => {
+            el.addEventListener('change', recalcular);
+        });
+
+        // Eventos itens/vendas
+        const chkItens = document.querySelectorAll('.chk-item');
+        const qtdItens = document.querySelectorAll('.qtd-item');
+        
+        chkItens.forEach((chk, idx) => {
+            chk.addEventListener('change', () => {
+                const input = qtdItens[idx];
+                if (chk.checked) {
+                    input.value = parseInt(input.value) || 1;
+                } else {
+                    input.value = 0;
+                }
+                recalcular();
+            });
+        });
+        
+        qtdItens.forEach((input, idx) => {
+            input.addEventListener('input', () => {
+                const chk = chkItens[idx];
+                input.value = Math.max(0, parseInt(input.value) || 0);
+                if (parseInt(input.value) > 0 && !chk.checked) {
+                    chk.checked = true;
+                }
+                recalcular();
+            });
+        });
+
+        // Inicializa
+        recalcular();
+    </script>
+</body>
+</html>
